@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NFAT Lifecycle — Full Process Diagram</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#060a10; color:#e2e8f0; font-family:'Inter',sans-serif; overflow:hidden; height:100vh; display:flex; flex-direction:column; }
+
+    #intro {
+      background:linear-gradient(135deg,#0a1628 0%,#0d1f3c 100%);
+      border-bottom:1px solid #1e3a5f;
+      padding:14px 28px 12px;
+      flex-shrink:0;
+      position:relative;
+    }
+    #intro h1 { font-size:17px; font-weight:800; color:#f8fafc; letter-spacing:0.4px; margin-bottom:5px; }
+    #intro p { font-size:11.5px; color:#94a3b8; line-height:1.6; max-width:860px; }
+    .badges { margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .badge { background:#1e3a5f; border:1px solid #3b82f6; border-radius:6px; padding:3px 10px; font-size:10.5px; font-weight:600; color:#60a5fa; display:flex; align-items:center; gap:5px; }
+    .badge.green { background:#021f0e; border-color:#10b981; color:#10b981; }
+    .badge.amber { background:#1f1200; border-color:#f59e0b; color:#f59e0b; }
+    .badge.purple { background:#0f0620; border-color:#a855f7; color:#a855f7; }
+    .badge.ts { background:#0a0f1a; border-color:#334155; color:#64748b; font-size:10px; }
+    #notion-link {
+      position:absolute; right:200px; top:50%; transform:translateY(-50%);
+      background:#1e3a5f; border:1px solid #3b82f6; border-radius:8px;
+      padding:7px 16px; color:#60a5fa; text-decoration:none; font-size:11.5px;
+      font-weight:600; display:flex; align-items:center; gap:5px; transition:background 0.2s;
+    }
+    #notion-link:hover { background:#2a4e7a; }
+    #notion-db-link {
+      position:absolute; right:24px; top:50%; transform:translateY(-50%);
+      background:#1f1200; border:1px solid #f59e0b; border-radius:8px;
+      padding:7px 16px; color:#f59e0b; text-decoration:none; font-size:11.5px;
+      font-weight:600; display:flex; align-items:center; gap:5px; transition:background 0.2s;
+    }
+    #notion-db-link:hover { background:#2a1a00; }
+
+    #toolbar {
+      background:#0a0f1a; border-bottom:1px solid #1e293b;
+      padding:5px 18px; display:flex; align-items:center; gap:10px;
+      flex-shrink:0; font-size:11px; color:#64748b;
+    }
+    .tool-btn {
+      background:#1e293b; border:1px solid #334155; border-radius:5px;
+      color:#94a3b8; padding:3px 9px; cursor:pointer; font-size:11px; transition:all 0.15s;
+    }
+    .tool-btn:hover { background:#334155; color:#e2e8f0; }
+    #zoom-level { color:#60a5fa; font-weight:600; min-width:38px; text-align:center; }
+
+    #canvas { flex:1; overflow:hidden; cursor:grab; position:relative; }
+    #canvas.grabbing { cursor:grabbing; }
+    #canvas-inner { transform-origin:0 0; display:inline-block; }
+
+    .stepbox { transition:stroke-width 0.15s, filter 0.15s; }
+    a:hover .stepbox { stroke-width:2.5 !important; filter:brightness(1.2); }
+
+    #legend {
+      position:fixed; bottom:14px; right:14px;
+      background:#0a0f1aee; border:1px solid #1e293b; border-radius:8px;
+      padding:10px 14px; font-size:10px; color:#94a3b8; backdrop-filter:blur(6px);
+    }
+    #legend h4 { font-size:10px; font-weight:700; color:#60a5fa; margin-bottom:7px; letter-spacing:0.5px; }
+    .leg-row { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+    .leg-swatch { width:26px; height:15px; border-radius:3px; flex-shrink:0; }
+    .leg-diamond { width:0; height:0; border:10px solid transparent; flex-shrink:0; }
+    .leg-hex { width:26px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .tool-btn.active { background:#3b82f6; border-color:#60a5fa; color:#fff; }
+    .db-legend-section { margin-top:10px; padding-top:8px; border-top:1px solid #1e293b; }
+    .db-legend-section h4 { font-size:10px; font-weight:700; color:#f59e0b; margin-bottom:7px; letter-spacing:0.5px; }
+  </style>
+</head>
+<body>
+
+<div id="intro">
+  <a id="notion-link" href="https://www.notion.so/31bb87693a5a8196832cf4ee00d3c740" target="_blank">📄 Full Doc in Notion ↗</a>
+  <a id="notion-db-link" href="https://www.notion.so/NFAT-Lifecycle-All-Steps-Stage-Cards-Database-Model-55223d6965ff4c69b5ab3d522c04dd12" target="_blank">🗄 DB Model in Notion ↗</a>
+  <h1>NFAT Lifecycle — Full Process Diagram</h1>
+  <p>
+    A graphical illustration of the full NFAT lifecycle across all 8 phases of the Laniakea Protocol.
+    <strong style="color:#f8fafc;">Notion is the single source of truth at all times.</strong>
+    This diagram is generated from the Notion documentation — always refer to Notion for the authoritative version.
+    Click any step box to open that phase in Notion, where you can read the full stage card detail and leave comments directly on the content.
+  </p>
+  <div class="badges">
+    <span class="badge">📄 Click any box → opens Notion phase page</span>
+    <span class="badge">💬 To comment: open in Notion and comment on the step card</span>
+    <span class="badge green">🟢 Book state transitions shown in green</span>
+    <span class="badge purple">🔷 Hexagon = approval / attestation gate</span>
+    <span class="badge amber">🔶 Diamond = branching decision point</span>
+    <span class="badge ts">🕐 Notion last edited: 9 March 2026 · 09:16 UTC</span>
+    <span class="badge ts" id="gen-ts">📅 Diagram generated: —</span>
+  </div>
+</div>
+
+<div id="toolbar">
+  <button class="tool-btn" onclick="zoom(1.2)">＋ Zoom In</button>
+  <button class="tool-btn" onclick="zoom(0.8)">－ Zoom Out</button>
+  <span id="zoom-level">100%</span>
+  <button class="tool-btn" onclick="resetView()">⊡ Reset</button>
+  <button class="tool-btn" onclick="fitView()">⤢ Fit to screen</button>
+  <span style="margin-left:8px;border-left:1px solid #334155;padding-left:10px;"></span>
+  <button class="tool-btn active" id="db-toggle" onclick="toggleDB()">🗄 DB Flow</button>
+  <span style="margin-left:8px; color:#475569;">Scroll wheel to zoom · Drag to pan · Toggle DB Flow for database operations</span>
+</div>
+
+<div id="canvas">
+  <div id="canvas-inner">
+    <svg xmlns="http://www.w3.org/2000/svg" id="mainsvg" width="4014" height="1930" viewBox="0 0 4014 1930" style="background:#0f1117;">
+<defs>
+  <marker id="a"  markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#94a3b8"/></marker>
+  <marker id="aw" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#f59e0b"/></marker>
+  <marker id="as" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#10b981"/></marker>
+  <marker id="ag" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#a855f7"/></marker>
+</defs>
+<rect x="0" y="0" width="4014" height="250" fill="#060c18" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="0" width="230" height="250" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="26" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 0 — Bootstrap</text>
+<text x="14" y="46" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">One-time setup per Facility.</text>
+<text x="14" y="58" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">All infrastructure must be</text>
+<text x="14" y="70" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">in place before any deal can</text>
+<text x="14" y="82" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">begin — risk models,</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.1 — Buy Box Defined in Notion">
+<rect x="233" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="46" x2="460" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="253" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.1</text>
+<text x="277" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Buy Box Defined</text>
+<text x="454" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo Contributor Team</text>
+<text x="236" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Establish investment</text>
+<text x="306" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">parameter ranges for all</text>
+<text x="236" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Decision to create a new</text>
+<text x="306" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">NFAT Facility</text>
+<text x="236" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Buy box parameters</text>
+<text x="306" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">documented &amp; signed off</text>
+<text x="236" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="236" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Definition</text>
+</a>
+<rect x="230" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="220" x2="460" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.2 — Risk Model Initialised in Notion">
+<rect x="499" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="496" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="496" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="496" y1="46" x2="726" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="502" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="519" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.2</text>
+<text x="543" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Risk Model</text>
+<text x="543" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Initialised</text>
+<text x="720" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="502" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="572" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Vector</text>
+<text x="502" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="572" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Confirm risk model exists,</text>
+<text x="572" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">is tested, and has required</text>
+<text x="502" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="572" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Buy box defined (0.1)</text>
+<text x="502" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="572" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Risk model confirmed</text>
+<text x="572" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">available, tested &amp; ready</text>
+<text x="502" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="572" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="502" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="572" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Definition</text>
+</a>
+<rect x="496" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="496" y1="220" x2="726" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="611" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.3 — Financial Risk Params in Notion">
+<rect x="765" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="762" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="762" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="762" y1="46" x2="992" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="768" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="785" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.3</text>
+<text x="809" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Financial Risk</text>
+<text x="809" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Params</text>
+<text x="986" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="768" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="838" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Risk Team</text>
+<text x="768" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="838" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Define position-level</text>
+<text x="838" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">financial risk params: CRR</text>
+<text x="768" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="838" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Risk model initialised</text>
+<text x="838" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(0.2)</text>
+<text x="768" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="838" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Financial risk parameters</text>
+<text x="838" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">documented</text>
+<text x="768" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="838" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="768" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="838" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Definition</text>
+</a>
+<rect x="762" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="762" y1="220" x2="992" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.4 — Non-Financial Risk Params in Notion">
+<rect x="1031" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1028" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="1028" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="1028" y1="46" x2="1258" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="1034" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="1051" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.4</text>
+<text x="1075" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Non-Financial Risk</text>
+<text x="1075" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Params</text>
+<text x="1252" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="1034" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1104" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Risk Team</text>
+<text x="1034" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1104" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Define non-financial risk</text>
+<text x="1104" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">params: smart contract</text>
+<text x="1034" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1104" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Step 0.3 complete</text>
+<text x="1034" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1104" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Non-financial risk</text>
+<text x="1104" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">parameters documented</text>
+<text x="1034" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1104" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="1034" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1104" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Definition</text>
+</a>
+<rect x="1028" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="1028" y1="220" x2="1258" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="1143" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.5 — Ecosystem Risk Params in Notion">
+<rect x="1297" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1294" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="1294" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="1294" y1="46" x2="1524" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="1300" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="1317" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.5</text>
+<text x="1341" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Ecosystem Risk</text>
+<text x="1341" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Params</text>
+<text x="1518" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="1300" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1370" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Risk Team</text>
+<text x="1300" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1370" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Define ecosystem-level risk</text>
+<text x="1370" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">params: concentration</text>
+<text x="1300" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1370" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Step 0.4 complete</text>
+<text x="1300" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1370" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Ecosystem risk parameters</text>
+<text x="1370" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">documented</text>
+<text x="1300" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1370" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="1300" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1370" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Definition</text>
+</a>
+<rect x="1294" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="1294" y1="220" x2="1524" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="1409" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.6 — Council Approves Risk Framework in Notion">
+<rect x="1563" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1560" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="1560" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="1560" y1="46" x2="1790" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="1566" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="1583" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.6</text>
+<text x="1607" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Council Approves</text>
+<text x="1607" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Risk Framework</text>
+<text x="1784" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="1566" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1636" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Core Council</text>
+<text x="1566" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1636" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Review all three risk param</text>
+<text x="1636" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">components. Write approved</text>
+<text x="1566" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1636" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">All three risk param types</text>
+<text x="1636" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">documented (0.3–0.5)</text>
+<text x="1566" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1636" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Risk framework written to</text>
+<text x="1636" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome Axis</text>
+<text x="1566" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1636" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="1566" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1636" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Approval</text>
+</a>
+<rect x="1560" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="1560" y1="220" x2="1790" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="1675" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.7 — cBEAM Granted to GovOps in Notion">
+<rect x="1829" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="1844,14 2038,14 2056,125 2038,236 1844,236 1826,125" fill="#08031a" stroke="#a855f7" stroke-width="1.8"/>
+<rect x="1844" y="14" width="194" height="32" fill="#a855f7" opacity="0.15"/>
+<rect x="1848" y="20" width="35" height="18" rx="4" fill="#a855f7"/>
+<text x="1865" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.7</text>
+<text x="1893" y="28" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">cBEAM Granted to</text>
+<text x="1893" y="40" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">GovOps</text>
+<text x="1850" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1920" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#a855f7">Core Council</text>
+<text x="1850" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1920" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Grant GovOps operational</text>
+<text x="1920" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">authority via</text>
+<text x="1850" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1920" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Risk framework approved</text>
+<text x="1920" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(0.6)</text>
+<text x="1850" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1920" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ cBEAM in GovOps wallet.</text>
+<text x="1920" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">14-day lock started.</text>
+<text x="1850" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1920" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="1850" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1920" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Configuration</text>
+<text x="1850" y="182" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="1920" y="182" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">⚠ 14-day BEAMTimeLock —</text>
+<text x="1920" y="191" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">must be planned 14 days</text>
+</a>
+<rect x="1826" y="220" width="230" height="16" rx="0" fill="#a855f7" opacity="0.12"/>
+<line x1="1826" y1="220" x2="2056" y2="220" stroke="#a855f7" stroke-width="0.5" opacity="0.4"/>
+<text x="1941" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#a855f7">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.8 — Attestor Identified in Notion">
+<rect x="2095" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="2092" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="2092" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="2092" y1="46" x2="2322" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="2098" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="2115" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.8</text>
+<text x="2139" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Attestor Identified</text>
+<text x="2316" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="2098" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="2168" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps</text>
+<text x="2098" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="2168" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Select independent</text>
+<text x="2168" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">third-party attestor</text>
+<text x="2098" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="2168" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Decision to proceed with</text>
+<text x="2168" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Facility creation</text>
+<text x="2098" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="2168" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Attestor company</text>
+<text x="2168" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">identified and selected</text>
+<text x="2098" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="2168" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="2098" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="2168" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Review</text>
+</a>
+<rect x="2092" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="2092" y1="220" x2="2322" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="2207" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.9 — Attestor Whitelisted in Notion">
+<rect x="2361" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="2358" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="2358" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="2358" y1="46" x2="2588" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="2364" y="20" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="2381" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.9</text>
+<text x="2405" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Attestor Whitelisted</text>
+<text x="2582" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="2364" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="2434" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps</text>
+<text x="2364" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="2434" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Grant attestor on-chain</text>
+<text x="2434" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">permission to sign</text>
+<text x="2364" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="2434" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestor identified (0.8)</text>
+<text x="2364" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="2434" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Whitelist tx confirmed.</text>
+<text x="2434" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Attestor in Synome (NFAT).</text>
+<text x="2364" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="2434" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="2364" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="2434" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Approval</text>
+</a>
+<rect x="2358" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="2358" y1="220" x2="2588" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="2473" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.10 — Halo Compliance Inputs ×6 in Notion">
+<rect x="2627" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="2624" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="2624" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="2624" y1="46" x2="2854" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="2630" y="20" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="2652" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.10</text>
+<text x="2680" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Halo Compliance</text>
+<text x="2680" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Inputs ×6</text>
+<text x="2848" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="2630" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="2700" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="2630" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="2700" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Submit all compliance</text>
+<text x="2700" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">inputs for Atlas admission:</text>
+<text x="2630" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="2700" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Facility registration</text>
+<text x="2700" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">decision made</text>
+<text x="2630" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="2700" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ GovOps confirms all 6</text>
+<text x="2700" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">inputs received and</text>
+<text x="2630" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="2700" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="2630" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="2700" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Submission</text>
+</a>
+<rect x="2624" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="2624" y1="220" x2="2854" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="2739" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  6 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.11 — Facility Registered in Notion">
+<rect x="2893" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="2890" y="14" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="2890" y="14" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="2890" y1="46" x2="3120" y2="46" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="2896" y="20" width="44" height="18" rx="4" fill="#10b981"/>
+<text x="2918" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.11</text>
+<text x="2946" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Facility Registered</text>
+<text x="3114" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="2896" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="2966" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps</text>
+<text x="2896" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="2966" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Deploy all on-chain</text>
+<text x="2966" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">contracts (PAU, queue,</text>
+<text x="2896" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="2966" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">cBEAM 14-day lock elapsed</text>
+<text x="2966" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(0.7). Risk framework in</text>
+<text x="2896" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="2966" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Facility on-chain.</text>
+<text x="2966" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Contracts verified. Book:</text>
+<text x="2896" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="2966" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">CREATED</text>
+<text x="2896" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="2966" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Configuration</text>
+</a>
+<rect x="2890" y="220" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="2890" y1="220" x2="3120" y2="220" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="3005" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  8 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.12 — Prime Type Classified in Notion">
+<rect x="3159" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="3156" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="3156" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="3156" y1="46" x2="3386" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="3162" y="20" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="3184" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.12</text>
+<text x="3212" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Prime Type</text>
+<text x="3212" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Classified</text>
+<text x="3380" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="3162" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="3232" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps</text>
+<text x="3162" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="3232" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Classify Prime as STAR or</text>
+<text x="3232" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">INCUBATOR. Record in Synome</text>
+<text x="3162" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="3232" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Facility registered (0.11)</text>
+<text x="3162" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="3232" y="116" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Prime type in Synome</text>
+<text x="3232" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT)</text>
+<text x="3162" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="3232" y="141" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="3162" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="3232" y="157" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Configuration</text>
+</a>
+<rect x="3156" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="3156" y1="220" x2="3386" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="3271" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.13 — Halo Administered in Atlas in Notion">
+<rect x="3425" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="3422" y="14" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="3422" y="14" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="3422" y1="46" x2="3652" y2="46" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="3428" y="20" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="3450" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.13</text>
+<text x="3478" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Halo Administered in</text>
+<text x="3478" y="39" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Atlas</text>
+<text x="3646" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="3428" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="3498" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Star Agent</text>
+<text x="3428" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="3498" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Review Halo compliance</text>
+<text x="3498" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">inputs from 0.10. Admit</text>
+<text x="3428" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="3498" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Halo compliance submitted</text>
+<text x="3498" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(0.10). Facility registered</text>
+<text x="3428" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="3498" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Halo administered in</text>
+<text x="3498" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Atlas. Synome (NFAT)</text>
+<text x="3428" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="3498" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="3428" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="3498" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Approval</text>
+</a>
+<rect x="3422" y="220" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="3422" y1="220" x2="3652" y2="220" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="3537" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a817c8658ffd4ae57862a" target="_blank" title="Open 0.14 — Prime Access Enabled in Notion">
+<rect x="3691" y="18" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="3688" y="14" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="3688" y="14" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="3688" y1="46" x2="3918" y2="46" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="3694" y="20" width="44" height="18" rx="4" fill="#10b981"/>
+<text x="3716" y="32" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">0.14</text>
+<text x="3744" y="27" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Prime Access Enabled</text>
+<text x="3912" y="26" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="3694" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="3764" y="59" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps</text>
+<text x="3694" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="3764" y="75" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Enable Prime access using</text>
+<text x="3764" y="84" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">cBEAM. Set rate limits</text>
+<text x="3694" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="3764" y="100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Halo administered in Atlas</text>
+<text x="3764" y="109" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(0.13)</text>
+<text x="3694" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="3764" y="125" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Prime access enabled.</text>
+<text x="3764" y="134" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Phase 0 complete.</text>
+<text x="3694" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="3764" y="150" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="3694" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="3764" y="166" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Configuration</text>
+</a>
+<rect x="3688" y="220" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="3688" y1="220" x2="3918" y2="220" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="3803" y="231" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  1 sub-step</text>
+<line x1="460" y1="125" x2="496" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="726" y1="125" x2="762" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="992" y1="125" x2="1028" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1258" y1="125" x2="1294" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1524" y1="125" x2="1560" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1790" y1="125" x2="1826" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="2056" y1="125" x2="2092" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="2322" y1="125" x2="2358" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="2588" y1="125" x2="2624" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="2854" y1="125" x2="2890" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="3120" y1="125" x2="3156" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="3386" y1="125" x2="3422" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="3652" y1="125" x2="3688" y2="125" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="0" y="260" width="4014" height="500" fill="#080c18" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="260" width="230" height="500" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="286" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 1 — Origination &amp; Gates</text>
+<text x="14" y="306" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Three sub-phases, one combined lane:</text>
+<text x="14" y="318" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">1A — Halo structures the asset deal</text>
+<text x="14" y="330" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">1B — Prime &amp; Halo agree on funding</text>
+<text x="14" y="342" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">1C — Two governance gates (GovOps,</text>
+<text x="14" y="354" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">      then Core Council) before capital</text>
+<text x="14" y="366" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">      moves on-chain.</text>
+<rect x="230" y="260" width="532" height="500" fill="#060f0a" opacity="0.6"/>
+<rect x="762" y="260" width="3252" height="500" fill="#0d0618" opacity="0.6"/>
+<line x1="744" y1="268" x2="744" y2="752" stroke="#60a5fa" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+<line x1="234" y1="510" x2="726" y2="510" stroke="#4b5563" stroke-width="0.6" stroke-dasharray="3,4" opacity="0.5"/>
+<text x="238" y="284" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9" font-weight="700" fill="#60a5fa" opacity="0.75">1A — Asset Track (Halo ↔ Borrower)</text>
+<text x="238" y="516" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9" font-weight="700" fill="#60a5fa" opacity="0.75">1B — Arrangement Track (Prime ↔ Halo)</text>
+<text x="770" y="284" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9" font-weight="700" fill="#a855f7" opacity="0.9">1C — Stage Gates</text>
+<a href="https://www.notion.so/31bb87693a5a814fadaace4c67accfe2" target="_blank" title="Open 1A.1 — Business Development in Notion">
+<rect x="233" y="278" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="274" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="274" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="306" x2="460" y2="306" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="280" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="258" y="292" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">1A.1</text>
+<text x="286" y="287" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Business Development</text>
+<text x="454" y="286" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="319" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="319" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="236" y="335" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="335" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Identify borrower</text>
+<text x="306" y="344" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">opportunity. Preliminary</text>
+<text x="236" y="360" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="360" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Phase 0 complete</text>
+<text x="236" y="376" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="376" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No formal gate — Halo</text>
+<text x="306" y="385" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">decides internally to</text>
+<text x="236" y="401" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="401" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="236" y="417" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="417" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">External Event</text>
+</a>
+<rect x="230" y="480" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="480" x2="460" y2="480" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="491" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  3 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a814fadaace4c67accfe2" target="_blank" title="Open 1A.2 — Asset Structuring &amp; Logging in Notion">
+<rect x="499" y="278" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="496" y="274" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="496" y="274" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="496" y1="306" x2="726" y2="306" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="502" y="280" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="524" y="292" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">1A.2</text>
+<text x="552" y="287" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Asset Structuring &amp;</text>
+<text x="552" y="299" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Logging</text>
+<text x="720" y="286" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="502" y="319" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="572" y="319" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="502" y="335" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="572" y="335" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Formally log asset in</text>
+<text x="572" y="344" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Synome (NFAT). Trigger buy</text>
+<text x="502" y="360" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="572" y="360" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Halo decided to proceed</text>
+<text x="572" y="369" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(1A.1)</text>
+<text x="502" y="385" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="572" y="385" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Asset in Synome (NFAT).</text>
+<text x="572" y="394" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Buy box PASS. DD started.</text>
+<text x="502" y="410" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="572" y="410" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="502" y="426" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="572" y="426" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Submission · Verification</text>
+</a>
+<rect x="496" y="480" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="496" y1="480" x2="726" y2="480" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="611" y="491" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  4 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a815385bfd2fc2926bb90" target="_blank" title="Open 1B.1 — Arrangement Structuring &amp; Logging in Notion">
+<rect x="233" y="528" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="524" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="524" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="556" x2="460" y2="556" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="530" width="44" height="18" rx="4" fill="#3b82f6"/>
+<text x="258" y="542" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">1B.1</text>
+<text x="286" y="537" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Arrangement</text>
+<text x="286" y="549" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Structuring &amp;</text>
+<text x="454" y="536" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="569" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="569" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="236" y="585" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="585" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Halo submits params. Prime</text>
+<text x="306" y="594" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">cryptographically signs.</text>
+<text x="236" y="610" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="610" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Informal Prime–Halo</text>
+<text x="306" y="619" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">agreement reached</text>
+<text x="236" y="635" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="635" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Both parties signed. Risk</text>
+<text x="306" y="644" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">check PASS. Attestor review</text>
+<text x="236" y="660" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="660" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="236" y="676" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="676" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Submission · Approval ·</text>
+<text x="306" y="685" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Verification</text>
+</a>
+<rect x="230" y="730" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="730" x2="460" y2="730" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="741" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  5 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a81a190bcfd578f649492" target="_blank" title="Open 1C.1 — Gate 1 — GovOps Approval in Notion">
+<rect x="765" y="403" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="780,399 974,399 992,510 974,621 780,621 762,510" fill="#08031a" stroke="#a855f7" stroke-width="1.8"/>
+<rect x="780" y="399" width="194" height="32" fill="#a855f7" opacity="0.15"/>
+<rect x="784" y="405" width="44" height="18" rx="4" fill="#a855f7"/>
+<text x="806" y="417" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">1C.1</text>
+<text x="838" y="413" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Gate 1 — GovOps</text>
+<text x="838" y="425" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Approval</text>
+<text x="786" y="444" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="856" y="444" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#a855f7">GovOps</text>
+<text x="786" y="460" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="856" y="460" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestor posts Stage Gate</text>
+<text x="856" y="469" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">1 attestation via</text>
+<text x="786" y="485" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="856" y="485" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Both 1A and 1B complete</text>
+<text x="786" y="501" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="856" y="501" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ GovOps approval in</text>
+<text x="856" y="510" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome (NFAT). Visible to</text>
+<text x="786" y="526" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="856" y="526" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="786" y="542" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="856" y="542" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation · Approval</text>
+</a>
+<rect x="762" y="605" width="230" height="16" rx="0" fill="#a855f7" opacity="0.12"/>
+<line x1="762" y1="605" x2="992" y2="605" stroke="#a855f7" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="616" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#a855f7">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a81a190bcfd578f649492" target="_blank" title="Open 1C.2 — Gate 2 — Core Council Approval in Notion">
+<rect x="1031" y="403" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="1046,399 1240,399 1258,510 1240,621 1046,621 1028,510" fill="#08031a" stroke="#a855f7" stroke-width="1.8"/>
+<rect x="1046" y="399" width="194" height="32" fill="#a855f7" opacity="0.15"/>
+<rect x="1050" y="405" width="44" height="18" rx="4" fill="#a855f7"/>
+<text x="1072" y="417" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">1C.2</text>
+<text x="1104" y="413" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Gate 2 — Core</text>
+<text x="1104" y="425" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Council Approval</text>
+<text x="1052" y="444" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1122" y="444" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#a855f7">Core Council</text>
+<text x="1052" y="460" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1122" y="460" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Final governance gate.</text>
+<text x="1122" y="469" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Reads Synome Position for</text>
+<text x="1052" y="485" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1122" y="485" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">GovOps approval confirmed</text>
+<text x="1122" y="494" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(1C.1)</text>
+<text x="1052" y="510" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1122" y="510" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Core Council approval.</text>
+<text x="1122" y="519" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Deal: FULLY APPROVED.</text>
+<text x="1052" y="535" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1122" y="535" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change</text>
+<text x="1052" y="551" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1122" y="551" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Review → Approval</text>
+</a>
+<rect x="1028" y="605" width="230" height="16" rx="0" fill="#a855f7" opacity="0.12"/>
+<line x1="1028" y1="605" x2="1258" y2="605" stroke="#a855f7" stroke-width="0.5" opacity="0.4"/>
+<text x="1143" y="616" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#a855f7">↳  1 sub-step</text>
+<line x1="460" y1="385" x2="496" y2="385" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="992" y1="510" x2="1028" y2="510" stroke="#a855f7" stroke-width="1.4" marker-end="url(#ag)"/>
+<path d="M726,385 L746,385 L746,510 L762,510" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aw)"/>
+<path d="M460,635 L746,635 L746,510 L762,510" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aw)"/>
+<rect x="0" y="770" width="4014" height="250" fill="#050e18" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="770" width="230" height="250" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="796" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 2 — NFAT Issuance</text>
+<text x="14" y="816" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Capital moves on-chain and</text>
+<text x="14" y="828" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">the NFAT is issued. Critical</text>
+<text x="14" y="840" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">sequence: capital must be</text>
+<text x="14" y="852" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">verified and locked before</text>
+<a href="https://www.notion.so/31bb87693a5a81c59fbac448b2a681c6" target="_blank" title="Open 2.1 — Prime Deposits USDS to Queue in Notion">
+<rect x="233" y="788" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="784" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="784" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="816" x2="460" y2="816" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="790" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="253" y="802" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">2.1</text>
+<text x="277" y="797" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Prime Deposits USDS</text>
+<text x="277" y="809" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">to Queue</text>
+<text x="454" y="796" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Prime</text>
+<text x="236" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Prime deposits USDS into</text>
+<text x="306" y="854" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">queue. GovOps verifies</text>
+<text x="236" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Phase 1C approvals</text>
+<text x="306" y="879" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">confirmed</text>
+<text x="236" y="895" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="895" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ depositRecord in Synome</text>
+<text x="306" y="904" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT). Status: VERIFIED.</text>
+<text x="236" y="920" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="920" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change (CREATED)</text>
+<text x="236" y="936" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="936" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Submission · Verification</text>
+</a>
+<rect x="230" y="990" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="990" x2="460" y2="990" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="1001" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a81c59fbac448b2a681c6" target="_blank" title="Open 2.2 — Withdraw before issuance? in Notion">
+<rect x="499" y="788" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="611,839 726,895 611,950 496,895" fill="#1a0e00" stroke="#f59e0b" stroke-width="1.8"/>
+<text x="611" y="891" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="800" fill="#f59e0b">Withdraw before</text>
+<text x="611" y="904" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="800" fill="#f59e0b">issuance?</text>
+<text x="734" y="899" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#f59e0b">NO →</text>
+<text x="611" y="964" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#f59e0b">YES ↓</text>
+<text x="611" y="976" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b" opacity="0.8">withdraw &amp; cancel deal</text>
+<rect x="594" y="821" width="35" height="15" rx="3" fill="#f59e0b"/>
+<text x="611" y="832" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" font-weight="700" fill="#fff">2.2</text>
+</a>
+<text x="611" y="987" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#f59e0b" opacity="0.6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a81c59fbac448b2a681c6" target="_blank" title="Open 2.3 — Verify Capital &amp; Lock in Notion">
+<rect x="765" y="788" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="762" y="784" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="762" y="784" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="762" y1="816" x2="992" y2="816" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="768" y="790" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="785" y="802" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">2.3</text>
+<text x="809" y="797" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Verify Capital &amp;</text>
+<text x="809" y="809" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Lock</text>
+<text x="986" y="796" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="768" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="838" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps</text>
+<text x="768" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="838" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Confirm capital adequacy vs</text>
+<text x="838" y="854" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Synome Position. Lock</text>
+<text x="768" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="838" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No withdrawal taken (2.2 =</text>
+<text x="838" y="879" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">NO)</text>
+<text x="768" y="895" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="838" y="895" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Capital requirements</text>
+<text x="838" y="904" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">confirmed. Capital locked</text>
+<text x="768" y="920" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="838" y="920" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">No change (CREATED)</text>
+<text x="768" y="936" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="838" y="936" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Verification · Execution</text>
+<text x="768" y="952" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="838" y="952" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">⚠ Must happen BEFORE NFAT</text>
+<text x="838" y="961" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">issuance (Step 2.4)</text>
+</a>
+<rect x="762" y="990" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="762" y1="990" x2="992" y2="990" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="1001" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a81c59fbac448b2a681c6" target="_blank" title="Open 2.4 — NFAT Issued — Atomic in Notion">
+<rect x="1031" y="788" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1028" y="784" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="1028" y="784" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="1028" y1="816" x2="1258" y2="816" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="1034" y="790" width="35" height="18" rx="4" fill="#10b981"/>
+<text x="1051" y="802" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">2.4</text>
+<text x="1075" y="797" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">NFAT Issued — Atomic</text>
+<text x="1252" y="796" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="1034" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1104" y="829" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps</text>
+<text x="1034" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1104" y="845" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Mint NFAT. Create unit.</text>
+<text x="1104" y="854" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Link to Book. Update Synome</text>
+<text x="1034" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1104" y="870" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Capital locked (2.3)</text>
+<text x="1034" y="886" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1104" y="886" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ NFAT issued. Book:</text>
+<text x="1104" y="895" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">FILLING. Unit linked.</text>
+<text x="1034" y="911" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1104" y="911" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">CREATED → FILLING</text>
+<text x="1034" y="927" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1104" y="927" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution · State</text>
+<text x="1104" y="936" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Transition</text>
+<text x="1034" y="952" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="1104" y="952" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">All sub-steps atomic — roll</text>
+<text x="1104" y="961" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">back together if any fail</text>
+</a>
+<rect x="1028" y="990" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="1028" y1="990" x2="1258" y2="990" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="1143" y="1001" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  4 sub-steps</text>
+<line x1="460" y1="895" x2="496" y2="895" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="726" y1="895" x2="762" y2="895" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="992" y1="895" x2="1028" y2="895" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="0" y="1030" width="4014" height="250" fill="#160404" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="1030" width="230" height="250" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="1056" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 3 — Capital Deployment</text>
+<text x="14" y="1076" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Capital crosses the</text>
+<text x="14" y="1088" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">on-chain/off-chain boundary</text>
+<text x="14" y="1100" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">into the real world.</text>
+<text x="14" y="1112" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Pre-deployment attestation</text>
+<a href="https://www.notion.so/31bb87693a5a8156b5a8cc5750a5b63e" target="_blank" title="Open 3.1 — CRR Check in Notion">
+<rect x="233" y="1048" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="1044" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="1044" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="1076" x2="460" y2="1076" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="1050" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="253" y="1062" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">3.1</text>
+<text x="277" y="1057" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">CRR Check</text>
+<text x="454" y="1056" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">System (lpla-verify)</text>
+<text x="236" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Read CRR formula from</text>
+<text x="306" y="1114" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Synome Axis, positions from</text>
+<text x="236" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Book: FILLING. Deployment</text>
+<text x="306" y="1139" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">being considered.</text>
+<text x="236" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ crrSnapshot in Synome</text>
+<text x="306" y="1164" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT). Risk position</text>
+<text x="236" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">FILLING</text>
+<text x="236" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Verification</text>
+</a>
+<rect x="230" y="1250" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="1250" x2="460" y2="1250" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="1261" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8156b5a8cc5750a5b63e" target="_blank" title="Open 3.2 — Attestation Requested in Notion">
+<rect x="499" y="1048" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="496" y="1044" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="496" y="1044" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="496" y1="1076" x2="726" y2="1076" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="502" y="1050" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="519" y="1062" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">3.2</text>
+<text x="543" y="1057" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Attestation</text>
+<text x="543" y="1069" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Requested</text>
+<text x="720" y="1056" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="502" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="572" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps</text>
+<text x="502" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="572" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Formally engage whitelisted</text>
+<text x="572" y="1114" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">attestor. Write</text>
+<text x="502" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="572" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">CRR snapshot confirmed</text>
+<text x="572" y="1139" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(3.1)</text>
+<text x="502" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="572" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Engagement record in</text>
+<text x="572" y="1164" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome (NFAT). Attestor has</text>
+<text x="502" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="572" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">FILLING</text>
+<text x="502" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="572" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Review</text>
+</a>
+<rect x="496" y="1250" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="496" y1="1250" x2="726" y2="1250" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="611" y="1261" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8156b5a8cc5750a5b63e" target="_blank" title="Open 3.3 — Pre-Deployment Attestation in Notion">
+<rect x="765" y="1048" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="780,1044 974,1044 992,1155 974,1266 780,1266 762,1155" fill="#08031a" stroke="#a855f7" stroke-width="1.8"/>
+<rect x="780" y="1044" width="194" height="32" fill="#a855f7" opacity="0.15"/>
+<rect x="784" y="1050" width="35" height="18" rx="4" fill="#a855f7"/>
+<text x="801" y="1062" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">3.3</text>
+<text x="829" y="1058" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Pre-Deployment</text>
+<text x="829" y="1070" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Attestation</text>
+<text x="786" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="856" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#a855f7">Attestor</text>
+<text x="786" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="856" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Verify legal structure,</text>
+<text x="856" y="1114" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">bank account, risk</text>
+<text x="786" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="856" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestor engaged (3.2)</text>
+<text x="786" y="1146" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="856" y="1146" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Pre-deployment</text>
+<text x="856" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">attestation in Synome</text>
+<text x="786" y="1171" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="856" y="1171" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">FILLING</text>
+<text x="786" y="1187" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="856" y="1187" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation</text>
+<text x="786" y="1203" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="856" y="1203" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">⚠ Must come BEFORE</text>
+<text x="856" y="1212" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">USDS→USDC off-ramp (Step</text>
+</a>
+<rect x="762" y="1250" width="230" height="16" rx="0" fill="#a855f7" opacity="0.12"/>
+<line x1="762" y1="1250" x2="992" y2="1250" stroke="#a855f7" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="1261" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#a855f7">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8156b5a8cc5750a5b63e" target="_blank" title="Open 3.4 — Off-Ramp: USDS → RWA in Notion">
+<rect x="1031" y="1048" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1028" y="1044" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="1028" y="1044" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="1028" y1="1076" x2="1258" y2="1076" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="1034" y="1050" width="35" height="18" rx="4" fill="#10b981"/>
+<text x="1051" y="1062" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">3.4</text>
+<text x="1075" y="1057" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Off-Ramp: USDS → RWA</text>
+<text x="1252" y="1056" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="1034" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1104" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps / Halo</text>
+<text x="1034" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1104" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">USDS → USDC → Halo bank →</text>
+<text x="1104" y="1114" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">borrowers. Synome Position</text>
+<text x="1034" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1104" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Pre-deployment attestation</text>
+<text x="1104" y="1139" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">confirmed (3.3)</text>
+<text x="1034" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1104" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Funds in Halo bank. Book:</text>
+<text x="1104" y="1164" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">DEPLOYING. Synome Position</text>
+<text x="1034" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1104" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">FILLING → DEPLOYING</text>
+<text x="1034" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1104" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">State Transition ·</text>
+<text x="1104" y="1205" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution</text>
+<text x="1034" y="1221" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="1104" y="1221" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">Synome Position cannot</text>
+<text x="1104" y="1230" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">track during DEPLOYING</text>
+</a>
+<rect x="1028" y="1250" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="1028" y1="1250" x2="1258" y2="1250" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="1143" y="1261" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  5 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a8156b5a8cc5750a5b63e" target="_blank" title="Open 3.5 — At-Rest Attestation in Notion">
+<rect x="1297" y="1048" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1294" y="1044" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="1294" y="1044" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="1294" y1="1076" x2="1524" y2="1076" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="1300" y="1050" width="35" height="18" rx="4" fill="#10b981"/>
+<text x="1317" y="1062" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">3.5</text>
+<text x="1341" y="1057" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">At-Rest Attestation</text>
+<text x="1518" y="1056" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="1300" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1370" y="1089" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Attestor</text>
+<text x="1300" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1370" y="1105" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Confirm deployment</text>
+<text x="1370" y="1114" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">complete. Verify risk</text>
+<text x="1300" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1370" y="1130" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Halo confirms capital</text>
+<text x="1370" y="1139" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">deployed (3.4.5)</text>
+<text x="1300" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1370" y="1155" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ At-rest attestation in</text>
+<text x="1370" y="1164" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome (NFAT). Book: AT</text>
+<text x="1300" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1370" y="1180" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">DEPLOYING → AT REST</text>
+<text x="1300" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1370" y="1196" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation · State</text>
+<text x="1370" y="1205" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Transition</text>
+</a>
+<rect x="1294" y="1250" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="1294" y1="1250" x2="1524" y2="1250" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="1409" y="1261" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  2 sub-steps</text>
+<line x1="460" y1="1155" x2="496" y2="1155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="726" y1="1155" x2="762" y2="1155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="992" y1="1155" x2="1028" y2="1155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1258" y1="1155" x2="1294" y2="1155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="0" y="1290" width="4014" height="250" fill="#080313" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="1290" width="230" height="250" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="1316" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 4 — Monitoring</text>
+<text x="14" y="1336" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Continuous surveillance</text>
+<text x="14" y="1348" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">while the Book is AT REST.</text>
+<text x="14" y="1360" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">lpla-verify reads all three</text>
+<text x="14" y="1372" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Synomes every cycle, writing</text>
+<a href="https://www.notion.so/31bb87693a5a818bba8ad94a8681c248" target="_blank" title="Open 4.1 — Verify Continuous Scan in Notion">
+<rect x="233" y="1308" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="1304" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="1304" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="1336" x2="460" y2="1336" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="1310" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="253" y="1322" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">4.1</text>
+<text x="277" y="1317" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Verify Continuous</text>
+<text x="277" y="1329" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Scan</text>
+<text x="454" y="1316" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">System (lpla-verify)</text>
+<text x="236" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Read all 3 Synomes</text>
+<text x="306" y="1374" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">simultaneously. Write</text>
+<text x="236" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Book: AT REST</text>
+<text x="236" y="1406" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="1406" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Runs continuously. Outputs</text>
+<text x="306" y="1415" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">feed Steps 4.2 and 4.3.</text>
+<text x="236" y="1431" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="1431" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="236" y="1447" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="1447" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Monitoring</text>
+</a>
+<rect x="230" y="1510" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="1510" x2="460" y2="1510" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="1521" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a818bba8ad94a8681c248" target="_blank" title="Open 4.2 — Periodic Re-Attestation in Notion">
+<rect x="499" y="1308" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="496" y="1304" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="496" y="1304" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="496" y1="1336" x2="726" y2="1336" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="502" y="1310" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="519" y="1322" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">4.2</text>
+<text x="543" y="1317" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Periodic</text>
+<text x="543" y="1329" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Re-Attestation</text>
+<text x="720" y="1316" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="502" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="572" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Attestor</text>
+<text x="502" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="572" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Post periodic attestation</text>
+<text x="572" y="1374" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">via lpha-attest on</text>
+<text x="502" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="572" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation schedule due</text>
+<text x="572" y="1399" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(flagged by 4.1.2)</text>
+<text x="502" y="1415" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="572" y="1415" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Re-attestation in Synome</text>
+<text x="572" y="1424" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT). CRR recalculated.</text>
+<text x="502" y="1440" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="572" y="1440" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="502" y="1456" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="572" y="1456" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation</text>
+</a>
+<rect x="496" y="1510" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="496" y1="1510" x2="726" y2="1510" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="611" y="1521" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a818bba8ad94a8681c248" target="_blank" title="Open 4.3 — Exception Handling in Notion">
+<rect x="765" y="1308" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="762" y="1304" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="762" y="1304" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="762" y1="1336" x2="992" y2="1336" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="768" y="1310" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="785" y="1322" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">4.3</text>
+<text x="809" y="1317" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Exception Handling</text>
+<text x="986" y="1316" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="768" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="838" y="1349" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">GovOps + Risk Council</text>
+<text x="768" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="838" y="1365" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Handle breach or anomaly</text>
+<text x="838" y="1374" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">flagged by lpla-verify.</text>
+<text x="768" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="838" y="1390" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">lpla-verify writes breach</text>
+<text x="838" y="1399" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">flag to Synome (NFAT)</text>
+<text x="768" y="1415" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="838" y="1415" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ exceptionRecord in Synome</text>
+<text x="838" y="1424" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT). Remediation owner</text>
+<text x="768" y="1440" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="838" y="1440" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="768" y="1456" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="838" y="1456" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Monitoring</text>
+<text x="768" y="1472" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="838" y="1472" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">⚠ Open: does lpla-verify</text>
+<text x="838" y="1481" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">block txs or apply punitive</text>
+</a>
+<rect x="762" y="1510" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="762" y1="1510" x2="992" y2="1510" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="1521" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<line x1="460" y1="1415" x2="496" y2="1415" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="726" y1="1415" x2="762" y2="1415" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<rect x="0" y="1550" width="4014" height="250" fill="#030e0e" stroke="#1e293b" stroke-width="0.8"/>
+<rect x="0" y="1550" width="230" height="250" fill="#0a0f1a" stroke="#1e293b" stroke-width="0.8"/>
+<text x="14" y="1576" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="12" font-weight="800" fill="#60a5fa">PHASE 5 — Unwinding &amp; Redemption</text>
+<text x="14" y="1596" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Capital returns from the</text>
+<text x="14" y="1608" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">real world back on-chain to</text>
+<text x="14" y="1620" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">Prime. Steps 5.1–5.6 repeat</text>
+<text x="14" y="1632" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" fill="#94a3b8" font-style="italic">per repayment tranche. Step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.1 — Repayment Triggered in Notion">
+<rect x="233" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="230" y="1564" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="230" y="1564" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="230" y1="1596" x2="460" y2="1596" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="236" y="1570" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="253" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.1</text>
+<text x="277" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Repayment Triggered</text>
+<text x="454" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="236" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="306" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="236" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="306" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Record repayment event in</text>
+<text x="306" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Synome (NFAT): type MATURED</text>
+<text x="236" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="306" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Repayment schedule hit or</text>
+<text x="306" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">early repayment event</text>
+<text x="236" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="306" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ repaymentEvent in Synome</text>
+<text x="306" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT) — type and amount</text>
+<text x="236" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="306" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="236" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="306" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">External Event</text>
+</a>
+<rect x="230" y="1770" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="230" y1="1770" x2="460" y2="1770" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="345" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.2 — Borrower Returns Funds in Notion">
+<rect x="499" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="496" y="1564" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="496" y="1564" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="496" y1="1596" x2="726" y2="1596" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="502" y="1570" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="519" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.2</text>
+<text x="543" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Borrower Returns</text>
+<text x="543" y="1589" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Funds</text>
+<text x="720" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="502" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="572" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo</text>
+<text x="502" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="572" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Receive repayment into Halo</text>
+<text x="572" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">bank. Record receipt in</text>
+<text x="502" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="572" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Repayment event recorded</text>
+<text x="572" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(5.1)</text>
+<text x="502" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="572" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ repaymentReceipt in</text>
+<text x="572" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome (NFAT). GovOps</text>
+<text x="502" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="572" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="502" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="572" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">External Event</text>
+</a>
+<rect x="496" y="1770" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="496" y1="1770" x2="726" y2="1770" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="611" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.3 — Fee Retrieval in Notion">
+<rect x="765" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="762" y="1564" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="762" y="1564" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="762" y1="1596" x2="992" y2="1596" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="768" y="1570" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="785" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.3</text>
+<text x="809" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Fee Retrieval</text>
+<text x="986" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="768" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="838" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Halo Manager</text>
+<text x="768" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="838" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Retrieve management fees</text>
+<text x="838" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">before returning net</text>
+<text x="768" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="838" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Funds confirmed in Halo</text>
+<text x="838" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">bank (5.2)</text>
+<text x="768" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="838" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ feeRecord in Synome</text>
+<text x="838" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">(NFAT). netReturnToPrime</text>
+<text x="768" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="838" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST</text>
+<text x="768" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="838" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution</text>
+<text x="768" y="1732" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="838" y="1732" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">⚠ Must happen BEFORE</text>
+<text x="838" y="1741" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">capital return to Prime</text>
+</a>
+<rect x="762" y="1770" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="762" y1="1770" x2="992" y2="1770" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="877" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.4 — On-Ramp: USD → USDS in Notion">
+<rect x="1031" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1028" y="1564" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="1028" y="1564" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="1028" y1="1596" x2="1258" y2="1596" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="1034" y="1570" width="35" height="18" rx="4" fill="#10b981"/>
+<text x="1051" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.4</text>
+<text x="1075" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">On-Ramp: USD → USDS</text>
+<text x="1252" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="1034" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1104" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps</text>
+<text x="1034" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1104" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">USD → USDC → USDS → Redeem</text>
+<text x="1104" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Contract. Synome (NFAT) and</text>
+<text x="1034" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1104" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Fees retrieved and net</text>
+<text x="1104" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">amount confirmed (5.3)</text>
+<text x="1034" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1104" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Funds in Redeem Contract.</text>
+<text x="1104" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Synome Position updated.</text>
+<text x="1034" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1104" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">AT REST → UNWINDING</text>
+<text x="1034" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1104" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">State Transition ·</text>
+<text x="1104" y="1725" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution</text>
+</a>
+<rect x="1028" y="1770" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="1028" y1="1770" x2="1258" y2="1770" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="1143" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  4 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.5 — Attestor Confirms Repayment in Notion">
+<rect x="1297" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="1312,1564 1506,1564 1524,1675 1506,1786 1312,1786 1294,1675" fill="#08031a" stroke="#a855f7" stroke-width="1.8"/>
+<rect x="1312" y="1564" width="194" height="32" fill="#a855f7" opacity="0.15"/>
+<rect x="1316" y="1570" width="35" height="18" rx="4" fill="#a855f7"/>
+<text x="1333" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.5</text>
+<text x="1361" y="1578" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Attestor Confirms</text>
+<text x="1361" y="1590" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Repayment</text>
+<text x="1318" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1388" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#a855f7">Attestor</text>
+<text x="1318" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1388" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Read Synome Position to</text>
+<text x="1388" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">cross-check USDS balance</text>
+<text x="1318" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1388" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Funds in Redeem Contract</text>
+<text x="1388" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">(5.4)</text>
+<text x="1318" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1388" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Repayment attestation</text>
+<text x="1388" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">in Synome (NFAT).</text>
+<text x="1318" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1388" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">UNWINDING</text>
+<text x="1318" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1388" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Attestation</text>
+</a>
+<rect x="1294" y="1770" width="230" height="16" rx="0" fill="#a855f7" opacity="0.12"/>
+<line x1="1294" y1="1770" x2="1524" y2="1770" stroke="#a855f7" stroke-width="0.5" opacity="0.4"/>
+<text x="1409" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#a855f7">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.6 — Balance &gt; 0? in Notion">
+<rect x="1563" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<polygon points="1675,1619 1790,1675 1675,1730 1560,1675" fill="#1a0e00" stroke="#f59e0b" stroke-width="1.8"/>
+<text x="1675" y="1671" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="800" fill="#f59e0b">Balance &gt; 0?</text>
+<text x="1798" y="1679" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#f59e0b">NO →</text>
+<text x="1675" y="1744" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8.5" font-weight="700" fill="#f59e0b">YES ↓</text>
+<text x="1675" y="1756" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b" opacity="0.8">loop back to Step 5.1</text>
+<rect x="1658" y="1601" width="35" height="15" rx="3" fill="#f59e0b"/>
+<text x="1675" y="1612" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" font-weight="700" fill="#fff">5.6</text>
+</a>
+<text x="1675" y="1767" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#f59e0b" opacity="0.6">↳  1 sub-step</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.7 — Interest Claims (Repeating) in Notion">
+<rect x="1829" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="1826" y="1564" width="230" height="222" rx="7" fill="#020d1e" stroke="#3b82f6" stroke-width="1.6" class="stepbox"/>
+<rect x="1826" y="1564" width="230" height="32" rx="7" fill="#3b82f6" opacity="0.15"/>
+<line x1="1826" y1="1596" x2="2056" y2="1596" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<rect x="1832" y="1570" width="35" height="18" rx="4" fill="#3b82f6"/>
+<text x="1849" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.7</text>
+<text x="1873" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Interest Claims</text>
+<text x="1873" y="1589" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">(Repeating)</text>
+<text x="2050" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6" opacity="0.6">↗ Notion</text>
+<text x="1832" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="1902" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#3b82f6">Prime</text>
+<text x="1832" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="1902" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">lpha-nfat deposits periodic</text>
+<text x="1902" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">interest to Redeem</text>
+<text x="1832" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="1902" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Per payment schedule in</text>
+<text x="1902" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Synome (NFAT)</text>
+<text x="1832" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="1902" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ Interest claimed.</text>
+<text x="1902" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">Schedule updated. Repeats</text>
+<text x="1832" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="1902" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">UNWINDING</text>
+<text x="1832" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="1902" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution · Submission</text>
+<text x="1832" y="1732" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">NOTE</text>
+<text x="1902" y="1732" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">NFAT NOT burned during</text>
+<text x="1902" y="1741" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#f59e0b">interest claims — only</text>
+</a>
+<rect x="1826" y="1770" width="230" height="16" rx="0" fill="#3b82f6" opacity="0.12"/>
+<line x1="1826" y1="1770" x2="2056" y2="1770" stroke="#3b82f6" stroke-width="0.5" opacity="0.4"/>
+<text x="1941" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#3b82f6">↳  2 sub-steps</text>
+<a href="https://www.notion.so/31bb87693a5a8123b6d1f216cddde285" target="_blank" title="Open 5.8 — Final Redemption &amp; Closure in Notion">
+<rect x="2095" y="1568" width="230" height="222" rx="7" fill="#000" opacity="0.2"/>
+<rect x="2092" y="1564" width="230" height="222" rx="7" fill="#021508" stroke="#10b981" stroke-width="1.6" class="stepbox"/>
+<rect x="2092" y="1564" width="230" height="32" rx="7" fill="#10b981" opacity="0.15"/>
+<line x1="2092" y1="1596" x2="2322" y2="1596" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<rect x="2098" y="1570" width="35" height="18" rx="4" fill="#10b981"/>
+<text x="2115" y="1582" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700" fill="#fff">5.8</text>
+<text x="2139" y="1577" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Final Redemption &amp;</text>
+<text x="2139" y="1589" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="10" font-weight="700" fill="#f8fafc">Closure</text>
+<text x="2316" y="1576" text-anchor="end" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981" opacity="0.6">↗ Notion</text>
+<text x="2098" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">RESPONSIBLE</text>
+<text x="2168" y="1609" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">GovOps / Prime</text>
+<text x="2098" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">PURPOSE</text>
+<text x="2168" y="1625" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Prime redeems. NFAT burned.</text>
+<text x="2168" y="1634" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Book permanently closed.</text>
+<text x="2098" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">ENTRY</text>
+<text x="2168" y="1650" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Balance = 0. All tranches</text>
+<text x="2168" y="1659" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">reconciled. All interest</text>
+<text x="2098" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">GATE / EXIT</text>
+<text x="2168" y="1675" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">◆ NFAT burned. Book:</text>
+<text x="2168" y="1684" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">CLOSED. Synome Position</text>
+<text x="2098" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">BOOK STATE</text>
+<text x="2168" y="1700" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#10b981">UNWINDING → CLOSED</text>
+<text x="2098" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="7" font-weight="700" fill="#4b5563">TYPE</text>
+<text x="2168" y="1716" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">State Transition ·</text>
+<text x="2168" y="1725" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="8" fill="#94a3b8">Execution</text>
+</a>
+<rect x="2092" y="1770" width="230" height="16" rx="0" fill="#10b981" opacity="0.12"/>
+<line x1="2092" y1="1770" x2="2322" y2="1770" stroke="#10b981" stroke-width="0.5" opacity="0.4"/>
+<text x="2207" y="1781" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#10b981">↳  2 sub-steps</text>
+<line x1="460" y1="1675" x2="496" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="726" y1="1675" x2="762" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="992" y1="1675" x2="1028" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1258" y1="1675" x2="1294" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1524" y1="1675" x2="1560" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="1790" y1="1675" x2="1826" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<line x1="2056" y1="1675" x2="2092" y2="1675" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#a)"/>
+<text x="14" y="1834" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="11" font-weight="700" fill="#10b981">BOOK STATE MACHINE</text>
+<rect x="94" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="158" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">CREATED</text>
+<text x="158" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">0.11.8</text>
+<line x1="226" y1="1859" x2="242" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="246" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="310" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">FILLING</text>
+<text x="310" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">2.4.4</text>
+<line x1="378" y1="1859" x2="394" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="398" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="462" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">OFFBOARDING</text>
+<text x="462" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">3.4.1</text>
+<line x1="530" y1="1859" x2="546" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="550" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="614" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">DEPLOYING</text>
+<text x="614" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">3.4.4</text>
+<line x1="682" y1="1859" x2="698" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="702" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="766" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">AT REST</text>
+<text x="766" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">3.5.2</text>
+<line x1="834" y1="1859" x2="850" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="854" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="918" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">UNWINDING</text>
+<text x="918" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">5.4.1</text>
+<line x1="986" y1="1859" x2="1002" y2="1859" stroke="#10b981" stroke-width="1.2" marker-end="url(#as)"/>
+<rect x="1006" y="1842" width="128" height="34" rx="5" fill="#021508" stroke="#10b981" stroke-width="1.2"/>
+<text x="1070" y="1855" text-anchor="middle" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="9.5" font-weight="700" fill="#10b981">CLOSED</text>
+<text x="1070" y="1869" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#94a3b8">5.8.1</text>
+</svg>
+  </div>
+</div>
+
+<div id="legend">
+  <h4>LEGEND</h4>
+  <div class="leg-row">
+    <div class="leg-swatch" style="background:#020d1e;border:1.5px solid #3b82f6;border-radius:3px;"></div>
+    Step — action / configuration
+  </div>
+  <div class="leg-row">
+    <svg width="26" height="16" viewBox="0 0 26 16">
+      <polygon points="4,0 22,0 26,8 22,16 4,16 0,8" fill="#08031a" stroke="#a855f7" stroke-width="1.5"/>
+    </svg>
+    Gate — approval / attestation
+  </div>
+  <div class="leg-row">
+    <svg width="26" height="16" viewBox="0 0 26 16">
+      <polygon points="13,0 26,8 13,16 0,8" fill="#1a0e00" stroke="#f59e0b" stroke-width="1.5"/>
+    </svg>
+    Decision — branching / loop
+  </div>
+  <div class="leg-row">
+    <div class="leg-swatch" style="background:#021508;border:1.5px solid #10b981;border-radius:3px;"></div>
+    State transition
+  </div>
+  <div class="db-legend-section" id="db-legend">
+    <h4>DATABASE FLOW</h4>
+    <div class="leg-row"><div class="leg-swatch" style="background:#1e3a5f;border:1.5px solid #3b82f6;border-radius:3px;font-size:7px;color:#60a5fa;text-align:center;line-height:15px;font-weight:700;">N</div> Synome NFAT</div>
+    <div class="leg-row"><div class="leg-swatch" style="background:#1f1200;border:1.5px solid #f59e0b;border-radius:3px;font-size:7px;color:#f59e0b;text-align:center;line-height:15px;font-weight:700;">A</div> Synome Axis</div>
+    <div class="leg-row"><div class="leg-swatch" style="background:#021508;border:1.5px solid #10b981;border-radius:3px;font-size:7px;color:#10b981;text-align:center;line-height:15px;font-weight:700;">P</div> Synome Position</div>
+    <div class="leg-row"><div class="leg-swatch" style="background:#021520;border:1.5px solid #06b6d4;border-radius:3px;font-size:7px;color:#06b6d4;text-align:center;line-height:15px;font-weight:700;">⛓</div> On-chain</div>
+    <div class="leg-row"><div class="leg-swatch" style="background:#1a0520;border:1.5px solid #ec4899;border-radius:3px;font-size:7px;color:#ec4899;text-align:center;line-height:15px;font-weight:700;">D</div> Doc Store</div>
+    <div class="leg-row"><div class="leg-swatch" style="background:#1a1a1a;border:1.5px solid #6b7280;border-radius:3px;font-size:7px;color:#9ca3af;text-align:center;line-height:15px;font-weight:700;">—</div> Off-system</div>
+    <div style="margin-top:6px;font-size:9px;color:#64748b;">
+      <span style="color:#10b981;font-weight:700;">C</span>=Create
+      <span style="color:#60a5fa;font-weight:700;margin-left:4px;">R</span>=Read
+      <span style="color:#f59e0b;font-weight:700;margin-left:4px;">U</span>=Update
+    </div>
+    <div style="margin-top:8px;padding-top:7px;border-top:1px solid #1e293b;">
+      <div style="font-size:9px;font-weight:700;color:#f59e0b;margin-bottom:5px;letter-spacing:0.5px;">PANEL COLUMNS</div>
+      <div style="font-size:8.5px;color:#64748b;line-height:1.7;">
+        <span style="color:#94a3b8;font-weight:600;">DB</span> — which database / layer<br>
+        <span style="color:#94a3b8;font-weight:600;">Table</span> — table name (e.g. N1, N2…)<br>
+        <span style="color:#94a3b8;font-weight:600;">Action</span> — CREATE / READ / UPDATE<br>
+        <span style="color:#94a3b8;font-weight:600;">Actor</span> — who performs the operation
+      </div>
+      <a href="https://www.notion.so/NFAT-Lifecycle-All-Steps-Stage-Cards-Database-Model-55223d6965ff4c69b5ab3d522c04dd12" target="_blank" style="display:block;margin-top:7px;color:#60a5fa;font-size:9px;text-decoration:none;font-weight:600;">📋 Full DB Model in Notion ↗</a>
+    </div>
+  </div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const inner  = document.getElementById('canvas-inner');
+  let scale = 1, tx = 0, ty = 0;
+  let dragging = false, lastX = 0, lastY = 0;
+  const ORIG_H = 1930;
+  let currentH = ORIG_H;
+
+  document.getElementById('gen-ts').textContent =
+    '📅 Diagram generated: ' + new Date().toLocaleString('en-GB', {dateStyle:'medium',timeStyle:'short'});
+
+  function applyTransform() {
+    inner.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+    document.getElementById('zoom-level').textContent = Math.round(scale * 100) + '%';
+  }
+  function zoom(factor, cx, cy) {
+    const rect = canvas.getBoundingClientRect();
+    cx = cx ?? rect.width / 2; cy = cy ?? rect.height / 2;
+    const ns = Math.min(Math.max(scale * factor, 0.06), 5);
+    const f = ns / scale;
+    tx = cx - f * (cx - tx); ty = cy - f * (cy - ty);
+    scale = ns; applyTransform();
+  }
+  function resetView() { scale=1; tx=0; ty=0; applyTransform(); }
+  function fitView() {
+    const rect = canvas.getBoundingClientRect();
+    const s = Math.min(rect.width / 4014, rect.height / currentH) * 0.96;
+    scale = s; tx = (rect.width - 4014*s)/2; ty = (rect.height - currentH*s)/2;
+    applyTransform();
+  }
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    zoom(e.deltaY < 0 ? 1.12 : 0.9, e.clientX-rect.left, e.clientY-rect.top);
+  }, {passive:false});
+  canvas.addEventListener('mousedown', e => {
+    if (e.target.closest('a')) return;
+    dragging=true; lastX=e.clientX; lastY=e.clientY; canvas.classList.add('grabbing');
+  });
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    tx+=e.clientX-lastX; ty+=e.clientY-lastY; lastX=e.clientX; lastY=e.clientY; applyTransform();
+  });
+  window.addEventListener('mouseup', () => { dragging=false; canvas.classList.remove('grabbing'); });
+  let lastTouchDist = null;
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length===1) { dragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; }
+  }, {passive:true});
+  canvas.addEventListener('touchmove', e => {
+    if (e.touches.length===2) {
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      if (lastTouchDist) zoom(d/lastTouchDist); lastTouchDist=d;
+    } else if (dragging&&e.touches.length===1) {
+      tx+=e.touches[0].clientX-lastX; ty+=e.touches[0].clientY-lastY;
+      lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; applyTransform();
+    }
+  }, {passive:true});
+  canvas.addEventListener('touchend', () => { dragging=false; lastTouchDist=null; });
+
+  /* ═══ DB FLOW ═══ */
+  const NS = 'http://www.w3.org/2000/svg';
+  const FN = "'Inter','Segoe UI',Arial,sans-serif";
+  const MN = "'JetBrains Mono',monospace";
+  const LH = 16, HDR = 20, PAD = 7;
+  const DBC = {N:'#3b82f6',A:'#f59e0b',P:'#10b981',chain:'#06b6d4',D:'#ec4899',off:'#6b7280'};
+  const OPC = {C:'#10b981',R:'#60a5fa',U:'#f59e0b'};
+  const DBL = {N:'NFAT',A:'Axis',P:'Pos',chain:'Chain',D:'Doc',off:'Off-sys'};
+  const OPL = {C:'CREATE',R:'READ',U:'UPDATE'};
+
+  const BAND_TOPS = [0,250,520,780,1040,1300,1560,1830];
+  function gBand(y){for(let i=BAND_TOPS.length-1;i>=0;i--)if(y>=BAND_TOPS[i])return i;return 0;}
+  function gElY(e){const t=e.tagName.toLowerCase();if(t==='a'){const r=e.querySelector('rect');return r?parseFloat(r.getAttribute('y')):0;}if(e.hasAttribute('y'))return parseFloat(e.getAttribute('y'));if(e.hasAttribute('y1'))return Math.min(parseFloat(e.getAttribute('y1')),parseFloat(e.getAttribute('y2')||e.getAttribute('y1')));if(e.hasAttribute('points')){const n=e.getAttribute('points').split(/[\s,]+/).map(Number);let m=9999;for(let i=1;i<n.length;i+=2)m=Math.min(m,n[i]);return m;}return 0;}
+  function mk(t,a){const e=document.createElementNS(NS,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;}
+
+  const POS={"0.1":{x:230,y:14,w:230,h:222},"0.2":{x:496,y:14,w:230,h:222},"0.3":{x:762,y:14,w:230,h:222},"0.4":{x:1028,y:14,w:230,h:222},"0.5":{x:1294,y:14,w:230,h:222},"0.6":{x:1560,y:14,w:230,h:222},"0.7":{x:1826,y:14,w:230,h:222},"0.8":{x:2092,y:14,w:230,h:222},"0.9":{x:2358,y:14,w:230,h:222},"0.10":{x:2624,y:14,w:230,h:222},"0.11":{x:2890,y:14,w:230,h:222},"0.12":{x:3156,y:14,w:230,h:222},"0.13":{x:3422,y:14,w:230,h:222},"0.14":{x:3688,y:14,w:230,h:222},"1A.1":{x:230,y:274,w:230,h:222},"1A.2":{x:496,y:274,w:230,h:222},"1B.1":{x:230,y:524,w:230,h:222},"1C.1":{x:762,y:399,w:230,h:222},"1C.2":{x:1028,y:399,w:230,h:222},"2.1":{x:230,y:784,w:230,h:222},"2.2":{x:496,y:784,w:230,h:222},"2.3":{x:762,y:784,w:230,h:222},"2.4":{x:1028,y:784,w:230,h:222},"3.1":{x:230,y:1044,w:230,h:222},"3.2":{x:496,y:1044,w:230,h:222},"3.3":{x:762,y:1044,w:230,h:222},"3.4":{x:1028,y:1044,w:230,h:222},"3.5":{x:1294,y:1044,w:230,h:222},"4.1":{x:230,y:1304,w:230,h:222},"4.2":{x:496,y:1304,w:230,h:222},"4.3":{x:762,y:1304,w:230,h:222},"5.1":{x:230,y:1564,w:230,h:222},"5.2":{x:496,y:1564,w:230,h:222},"5.3":{x:762,y:1564,w:230,h:222},"5.4":{x:1028,y:1564,w:230,h:222},"5.5":{x:1294,y:1564,w:230,h:222},"5.6":{x:1560,y:1564,w:230,h:222},"5.7":{x:1826,y:1564,w:230,h:222},"5.8":{x:2092,y:1564,w:230,h:222}};
+
+  const DB={
+    "0.1":{t:"Buy Box Defined",o:[{d:"off",t:"DEMO-1",p:"C",w:"Halo",n:"Draft buy box params off-system"}]},
+    "0.2":{t:"Risk Model Init",o:[{d:"off",t:"DEMO-2",p:"C",w:"Vector",n:"Risk model doc off-system"},{d:"A",t:"A1",p:"R",w:"Vector",n:"Reads existing model registry"}]},
+    "0.3":{t:"Financial Risk",o:[{d:"off",t:"DEMO-3",p:"C",w:"Risk Team",n:"Financial risk params off-system"}]},
+    "0.4":{t:"Non-Fin Risk",o:[{d:"off",t:"DEMO-4",p:"C",w:"Risk Team",n:"Non-financial risk params off-system"}]},
+    "0.5":{t:"Ecosystem Risk",o:[{d:"off",t:"DEMO-5",p:"C",w:"Risk Team",n:"Ecosystem params off-system"},{d:"N",t:"N2",p:"R",w:"Risk Team",n:"Reads facility exposures"},{d:"P",t:"P1",p:"R",w:"Risk Team",n:"Reads portfolio positions"}]},
+    "0.6":{t:"Council Approves",o:[{d:"A",t:"A1",p:"C",w:"Core Council",n:"Create risk_frameworks via Council Beacon"}]},
+    "0.7":{t:"cBEAM Granted",o:[{d:"chain",t:"BEAMTimeLock",p:"C",w:"Core Council",n:"On-chain grant — 14-day lock"}]},
+    "0.8":{t:"Attestor Identified",o:[{d:"off",t:"DEMO-6",p:"C",w:"GovOps",n:"Attestor selection + conflict check"}]},
+    "0.9":{t:"Attestor Whitelisted",o:[{d:"N",t:"N11a",p:"C",w:"GovOps",n:"attestor_whitelist via lpha-nfat"},{d:"chain",t:"Whitelist",p:"C",w:"GovOps",n:"On-chain permission grant"}]},
+    "0.10":{t:"Compliance ×6",o:[{d:"N",t:"N12",p:"C",w:"Halo",n:"6× compliance_files via lpha-nfat"},{d:"D",t:"D1",p:"C",w:"Halo",n:"6 PDFs → Doc Store"}]},
+    "0.11":{t:"Facility Registered",o:[{d:"N",t:"N1",p:"C",w:"GovOps",n:"Create facilities row"},{d:"N",t:"N2",p:"C",w:"GovOps",n:"Create books (CREATED)"},{d:"A",t:"A1",p:"R",w:"GovOps",n:"Reads risk framework"},{d:"chain",t:"Contracts",p:"C",w:"GovOps",n:"Deploy PAU, queue, redeem, pBEAMs"}]},
+    "0.12":{t:"Prime Type",o:[{d:"N",t:"N1",p:"U",w:"GovOps",n:"Set primeType STAR|INCUBATOR"}]},
+    "0.13":{t:"Halo in Atlas",o:[{d:"N",t:"N13",p:"C",w:"Star Agent",n:"Create halo_records"},{d:"N",t:"N12",p:"R",w:"Star Agent",n:"Reviews compliance files"}]},
+    "0.14":{t:"Prime Access",o:[{d:"N",t:"N1",p:"U",w:"GovOps",n:"Enable primeAccess"},{d:"chain",t:"Access",p:"C",w:"GovOps",n:"On-chain access grant"}]},
+    "1A.1":{t:"Biz Development",o:[{d:"off",t:"—",p:"R",w:"Halo",n:"Entirely off-system"}]},
+    "1A.2":{t:"Asset Structuring",o:[{d:"N",t:"N5",p:"C",w:"Halo",n:"Create asset_proposals"},{d:"N",t:"N5",p:"U",w:"System",n:"Buy box check result"},{d:"N",t:"N7",p:"C",w:"Attestor",n:"due_diligence via lpha-attest"},{d:"N",t:"N5",p:"U",w:"System",n:"GovOps notification"}]},
+    "1B.1":{t:"Arrangement",o:[{d:"N",t:"N6",p:"C",w:"Halo",n:"Create arrangement_proposals"},{d:"N",t:"N6",p:"U",w:"Inv. Prime",n:"Prime signature"},{d:"A",t:"A1",p:"R",w:"System",n:"Risk framework check"},{d:"N",t:"N8",p:"C",w:"Attestor",n:"arrangement_reviews"},{d:"chain",t:"Sig",p:"C",w:"Inv. Prime",n:"On-chain signature"}]},
+    "1C.1":{t:"Gate 1 GovOps",o:[{d:"N",t:"N9",p:"C",w:"Attestor",n:"Stage Gate 1 attestation"},{d:"D",t:"D2",p:"C",w:"Attestor",n:"PDF → Doc Store"},{d:"N",t:"N10",p:"C",w:"GovOps",n:"stage_gates row"},{d:"N",t:"N4",p:"C",w:"GovOps",n:"deals (GOVOPS_APPROVED)"}]},
+    "1C.2":{t:"Gate 2 Council",o:[{d:"N",t:"N10",p:"C",w:"Core Council",n:"stage_gates via Council Beacon"},{d:"N",t:"N4",p:"U",w:"Core Council",n:"deals → FULLY_APPROVED"},{d:"A",t:"A1",p:"R",w:"Core Council",n:"System-level risk review"},{d:"P",t:"P1",p:"R",w:"Core Council",n:"Prime positions review"}]},
+    "2.1":{t:"Deposit USDS",o:[{d:"chain",t:"Queue",p:"C",w:"Inv. Prime",n:"On-chain USDS deposit"},{d:"N",t:"N14",p:"C",w:"GovOps",n:"deposit_records (VERIFIED)"}]},
+    "2.2":{t:"Optional Withdraw",o:[{d:"N",t:"N14",p:"U",w:"Inv. Prime",n:"WITHDRAWN (if exercised)"},{d:"chain",t:"Queue",p:"C",w:"Inv. Prime",n:"On-chain withdrawal"}]},
+    "2.3":{t:"Capital & Lock",o:[{d:"N",t:"N15",p:"C",w:"lpla-verify",n:"capital_checks (PASS/FAIL)"},{d:"N",t:"N16",p:"C",w:"GovOps",n:"capital_locks (LOCKED)"},{d:"chain",t:"Lock",p:"C",w:"GovOps",n:"On-chain capital lock"},{d:"A",t:"A1",p:"R",w:"lpla-verify",n:"Risk framework"},{d:"P",t:"P1",p:"R",w:"lpla-verify",n:"Prime positions"}]},
+    "2.4":{t:"NFAT Issued",o:[{d:"chain",t:"NFAT",p:"C",w:"GovOps",n:"Mint NFAT token"},{d:"N",t:"N3",p:"C",w:"GovOps",n:"units row (ACTIVE)"},{d:"N",t:"N2",p:"U",w:"GovOps",n:"books → FILLING"},{d:"P",t:"P1",p:"C",w:"lpla-verify",n:"prime_positions row"}]},
+    "3.1":{t:"CRR Check",o:[{d:"N",t:"N17",p:"C",w:"lpla-verify",n:"crr_snapshots (PRE_DEPLOYMENT)"},{d:"A",t:"A1",p:"R",w:"lpla-verify",n:"CRR formula"},{d:"P",t:"P1",p:"R",w:"lpla-verify",n:"Current positions"}]},
+    "3.2":{t:"Attestation Req",o:[{d:"N",t:"N11b",p:"C",w:"GovOps",n:"attestor_assignments (book)"},{d:"N",t:"N18",p:"C",w:"GovOps",n:"pre_deploy_engagements"},{d:"N",t:"N11a",p:"R",w:"GovOps",n:"Reads attestor whitelist"}]},
+    "3.3":{t:"Pre-Deploy Attest",o:[{d:"N",t:"N9",p:"C",w:"Attestor",n:"PRE_DEPLOYMENT attestation"},{d:"D",t:"D2",p:"C",w:"Attestor",n:"PDF → Doc Store"},{d:"A",t:"A1",p:"R",w:"Attestor",n:"Risk framework"}]},
+    "3.4":{t:"Off-Ramp",o:[{d:"N",t:"N2",p:"U",w:"System",n:"books → DEPLOYING"},{d:"P",t:"P1",p:"U",w:"lpla-verify",n:"USDS→USDC→IN_TRANSIT"},{d:"chain",t:"ALMProxy",p:"C",w:"System",n:"USDS→USDC→bank"},{d:"off",t:"DEMO-9",p:"C",w:"Halo",n:"Bank event"},{d:"off",t:"DEMO-10",p:"C",w:"Halo",n:"Borrower deployment"}]},
+    "3.5":{t:"At-Rest Attest",o:[{d:"N",t:"N9",p:"C",w:"Attestor",n:"AT_REST attestation"},{d:"D",t:"D2",p:"C",w:"Attestor",n:"PDF → Doc Store"},{d:"N",t:"N2",p:"U",w:"System",n:"books → AT_REST"},{d:"P",t:"P1",p:"U",w:"lpla-verify",n:"CRR recalculated"}]},
+    "4.1":{t:"Continuous Scan",o:[{d:"N",t:"N19",p:"C",w:"lpla-verify",n:"monitoring_snapshots (high vol)"},{d:"N",t:"N20",p:"C",w:"lpla-verify",n:"attestation_alerts if overdue"},{d:"A",t:"A1",p:"R",w:"lpla-verify",n:"Risk framework rules"},{d:"P",t:"P1",p:"R",w:"lpla-verify",n:"All positions"},{d:"N",t:"N2",p:"R",w:"lpla-verify",n:"Book state"}]},
+    "4.2":{t:"Re-Attestation",o:[{d:"N",t:"N9",p:"C",w:"Attestor",n:"PERIODIC attestation"},{d:"D",t:"D2",p:"C",w:"Attestor",n:"PDF → Doc Store"},{d:"N",t:"N2",p:"U",w:"System",n:"nextAttestationDue"},{d:"P",t:"P1",p:"U",w:"lpla-verify",n:"CRR recalculated"}]},
+    "4.3":{t:"Exception Handling",o:[{d:"N",t:"N21",p:"C",w:"GovOps",n:"exception_records"},{d:"N",t:"N19",p:"R",w:"GovOps",n:"Monitoring snapshots"},{d:"A",t:"A1",p:"R",w:"GovOps",n:"Risk thresholds"}]},
+    "5.1":{t:"Repayment Triggered",o:[{d:"N",t:"N22",p:"C",w:"Halo",n:"repayment_events"},{d:"off",t:"DEMO-11",p:"C",w:"Halo",n:"Borrower repayment"}]},
+    "5.2":{t:"Funds Returned",o:[{d:"N",t:"N23",p:"C",w:"Halo",n:"repayment_receipts"},{d:"off",t:"DEMO-9",p:"C",w:"Halo",n:"Bank event"}]},
+    "5.3":{t:"Fee Retrieval",o:[{d:"N",t:"N24",p:"C",w:"Halo Mgr",n:"fee_records"}]},
+    "5.4":{t:"On-Ramp",o:[{d:"N",t:"N2",p:"U",w:"System",n:"books → UNWINDING"},{d:"N",t:"N3",p:"U",w:"System",n:"units → REPAYMENT_AVAILABLE"},{d:"P",t:"P1",p:"U",w:"lpla-verify",n:"Positions trackable"},{d:"chain",t:"Redeem",p:"C",w:"System",n:"USDS → Redeem Contract"}]},
+    "5.5":{t:"Repayment Attest",o:[{d:"N",t:"N9",p:"C",w:"Attestor",n:"REPAYMENT attestation"},{d:"D",t:"D2",p:"C",w:"Attestor",n:"PDF → Doc Store"}]},
+    "5.6":{t:"Balance > 0?",o:[{d:"N",t:"N2",p:"R",w:"System",n:"Reads outstanding balance"}]},
+    "5.7":{t:"Interest Claims",o:[{d:"N",t:"N25",p:"C",w:"System",n:"interest_payments (DEPOSITED)"},{d:"N",t:"N25",p:"U",w:"Inv. Prime",n:"status → CLAIMED"},{d:"chain",t:"Redeem",p:"C",w:"System",n:"USDS deposited"},{d:"chain",t:"Claim",p:"C",w:"Inv. Prime",n:"On-chain claim"}]},
+    "5.8":{t:"Final Closure",o:[{d:"N",t:"N2",p:"U",w:"Inv. Prime",n:"books → CLOSED"},{d:"N",t:"N3",p:"U",w:"Inv. Prime",n:"units → CLOSED"},{d:"N",t:"N27",p:"C",w:"GovOps",n:"facility_closure_records"},{d:"N",t:"N1",p:"U",w:"GovOps",n:"facilities → CLOSED"},{d:"P",t:"P1",p:"U",w:"lpla-verify",n:"Position removed"},{d:"chain",t:"NFAT",p:"C",w:"System",n:"NFAT burned"},{d:"chain",t:"Facility",p:"C",w:"System",n:"Permissions frozen"}]}
+  };
+
+  let dbVisible = true;
+  const bandGroups = [];
+  const bridges = [];
+
+  function initBands() {
+    const svg = document.getElementById('mainsvg');
+    const df = svg.querySelector('defs');
+    for (let i = 0; i < BAND_TOPS.length; i++) {
+      const g = document.createElementNS(NS,'g'); g.id='band-'+i; bandGroups.push(g);
+    }
+    const kids = [...svg.children].filter(c => c !== df);
+    for (const ch of kids) {
+      const y = gElY(ch);
+      const b = gBand(y);
+      if (ch.tagName.toLowerCase()==='line' && ch.hasAttribute('y1') && ch.hasAttribute('y2')) {
+        const y1=parseFloat(ch.getAttribute('y1')), y2=parseFloat(ch.getAttribute('y2'));
+        if (gBand(y1)!==gBand(y2)) {
+          bridges.push({el:ch, y1, y2});
+          bandGroups[Math.min(gBand(y1),gBand(y2))].appendChild(ch);
+          continue;
+        }
+      }
+      bandGroups[b].appendChild(ch);
+    }
+    for (const g of bandGroups) svg.appendChild(g);
+  }
+
+  function panelH(sid) {
+    const d = DB[sid]; if(!d) return 0;
+    return HDR + 17 + d.o.length * LH + PAD*2 + 4; // +17 for col header row
+  }
+
+  function calcOffsets() {
+    const extra = {};
+    for (const [s,p] of Object.entries(POS)) {
+      const b = gBand(p.y), ph = panelH(s) + 14;
+      if (!extra[b] || ph > extra[b]) extra[b] = ph;
+    }
+    const off = {}; let cum = 0;
+    for (let b = 0; b < BAND_TOPS.length; b++) {
+      off[b] = cum;
+      if (extra[b]) cum += extra[b];
+    }
+    return {off, tot: cum};
+  }
+
+  function applyDB(on) {
+    const svg = document.getElementById('mainsvg');
+    if (on) {
+      const {off, tot} = calcOffsets();
+      currentH = ORIG_H + tot;
+      svg.setAttribute('height', currentH);
+      svg.setAttribute('viewBox', '0 0 4014 '+currentH);
+      for (let b=0; b<bandGroups.length; b++) {
+        bandGroups[b].setAttribute('transform', off[b] ? 'translate(0,'+off[b]+')' : '');
+      }
+      for (const bl of bridges) {
+        bl.el.setAttribute('y1', bl.y1 + (off[gBand(bl.y1)]||0));
+        bl.el.setAttribute('y2', bl.y2 + (off[gBand(bl.y2)]||0));
+      }
+      drawPanels(off);
+    } else {
+      currentH = ORIG_H;
+      svg.setAttribute('height', ORIG_H);
+      svg.setAttribute('viewBox', '0 0 4014 '+ORIG_H);
+      for (const g of bandGroups) g.setAttribute('transform','');
+      for (const bl of bridges) { bl.el.setAttribute('y1',bl.y1); bl.el.setAttribute('y2',bl.y2); }
+      const layer = document.getElementById('db-layer');
+      if (layer) layer.remove();
+    }
+  }
+
+  function drawPanels(off) {
+    const svg = document.getElementById('mainsvg');
+    let layer = document.getElementById('db-layer');
+    if (layer) layer.remove();
+    layer = document.createElementNS(NS,'g'); layer.id='db-layer';
+
+    for (const [sid,pos] of Object.entries(POS)) {
+      const data = DB[sid]; if(!data) continue;
+      const bo = off[gBand(pos.y)]||0;
+      const px = pos.x, py = pos.y+bo+pos.h+8, pw = pos.w, ph = panelH(sid);
+      const cx = px+pw/2;
+
+      // Column layout (within pw=230): DB=7-52 | Table=54-105 | Action=107-165 | Actor=167-pw-4
+      const COL = { db:{x:px+7,w:44}, tbl:{x:px+55,w:50}, act:{x:px+108,w:54}, who:{x:px+167,w:pw-167-6} };
+
+      // Connector
+      layer.appendChild(mk('line',{x1:cx,y1:pos.y+bo+pos.h,x2:cx,y2:py,stroke:'#f59e0b','stroke-width':'1.3','stroke-dasharray':'4,3',opacity:'0.5'}));
+      // Shadow
+      layer.appendChild(mk('rect',{x:px+3,y:py+3,width:pw,height:ph,rx:'7',fill:'#000',opacity:'0.4'}));
+      // Background
+      layer.appendChild(mk('rect',{x:px,y:py,width:pw,height:ph,rx:'7',fill:'#0a0f1c',stroke:'#f59e0b','stroke-width':'1.5'}));
+      // Header bg
+      layer.appendChild(mk('rect',{x:px+1,y:py+1,width:pw-2,height:HDR-1,rx:'6',fill:'#f59e0b',opacity:'0.12'}));
+      // Header text
+      const ht = mk('text',{x:px+10,y:py+14.5,'font-family':MN,'font-size':'10.5','font-weight':'700',fill:'#f59e0b'});
+      ht.textContent = '\u{1F5C4} '+sid+' · '+data.t; layer.appendChild(ht);
+      // Count
+      const ct = mk('text',{x:px+pw-10,y:py+14.5,'text-anchor':'end','font-family':MN,'font-size':'9.5','font-weight':'600',fill:'#f59e0b',opacity:'0.45'});
+      ct.textContent = data.o.length+' op'+(data.o.length>1?'s':''); layer.appendChild(ct);
+      // Separator
+      layer.appendChild(mk('line',{x1:px+6,y1:py+HDR,x2:px+pw-6,y2:py+HDR,stroke:'#f59e0b','stroke-width':'0.5',opacity:'0.25'}));
+
+      // Column header row
+      const chY = py + HDR + 10;
+      const colHdrStyle = {'font-family':FN,'font-size':'7','font-weight':'700',fill:'#4b5563'};
+      const chLabels = [['DB', COL.db.x+COL.db.w/2], ['Table', COL.tbl.x+COL.tbl.w/2], ['Action', COL.act.x+COL.act.w/2], ['Actor', COL.who.x]];
+      for (const [lbl, lx] of chLabels) {
+        const el = mk('text', {...colHdrStyle, x:lx, y:chY, 'text-anchor': lbl==='Actor' ? 'start' : 'middle'});
+        el.textContent = lbl; layer.appendChild(el);
+      }
+      // Col header underline
+      layer.appendChild(mk('line',{x1:px+6,y1:py+HDR+13,x2:px+pw-6,y2:py+HDR+13,stroke:'#374151','stroke-width':'0.4',opacity:'0.6'}));
+
+      // Rows — offset by extra col-header height (13+4=17)
+      const ROW_OFFSET = 17;
+      data.o.forEach((op,i) => {
+        const ry = py + HDR + PAD + ROW_OFFSET + i*LH + 12;
+        const col = DBC[op.d]||'#6b7280', opc = OPC[op.p]||'#94a3b8';
+
+        // DB pill
+        layer.appendChild(mk('rect',{x:COL.db.x,y:ry-11,width:COL.db.w,height:15,rx:'3',fill:col,opacity:'0.18',stroke:col,'stroke-width':'0.8'}));
+        const dt=mk('text',{x:COL.db.x+COL.db.w/2,y:ry,'text-anchor':'middle','font-family':MN,'font-size':'9.5','font-weight':'700',fill:col});
+        dt.textContent=DBL[op.d]||op.d; layer.appendChild(dt);
+
+        // Table
+        const tt=mk('text',{x:COL.tbl.x,y:ry,'font-family':MN,'font-size':'10','font-weight':'600',fill:'#e2e8f0'});
+        tt.textContent=op.t; layer.appendChild(tt);
+
+        // Action pill
+        layer.appendChild(mk('rect',{x:COL.act.x,y:ry-11,width:COL.act.w,height:15,rx:'3',fill:opc,opacity:'0.15'}));
+        const ot=mk('text',{x:COL.act.x+COL.act.w/2,y:ry,'text-anchor':'middle','font-family':MN,'font-size':'9','font-weight':'700',fill:opc});
+        ot.textContent=OPL[op.p]||op.p; layer.appendChild(ot);
+
+        // Actor
+        const wt=mk('text',{x:COL.who.x,y:ry,'font-family':FN,'font-size':'9.5',fill:'#94a3b8'});
+        wt.textContent=(op.w.length>11?op.w.slice(0,10)+'…':op.w); layer.appendChild(wt);
+      });
+    }
+    svg.appendChild(layer);
+  }
+
+  function toggleDB() {
+    dbVisible = !dbVisible;
+    document.getElementById('db-toggle').classList.toggle('active',dbVisible);
+    document.getElementById('db-legend').style.display = dbVisible?'block':'none';
+    applyDB(dbVisible);
+    fitView();
+  }
+
+  window.addEventListener('load', () => {
+    initBands();
+    applyDB(true);
+    fitView();
+  });
+
+</script>
+</body>
+</html>
