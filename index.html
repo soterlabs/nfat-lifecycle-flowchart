@@ -75,6 +75,32 @@
 </head>
 <body>
 
+<!-- Password Gate -->
+<div id="password-gate" style="
+  position:fixed; inset:0; z-index:99999;
+  background:#060a10; display:flex; align-items:center; justify-content:center;
+">
+  <div style="
+    background:#0a1628; border:1px solid #1e3a5f; border-radius:12px;
+    padding:40px; text-align:center; max-width:360px; width:90%;
+  ">
+    <h2 style="font-size:18px; font-weight:700; color:#f8fafc; margin-bottom:6px;">NFAT Lifecycle Diagram</h2>
+    <p style="font-size:12px; color:#64748b; margin-bottom:24px;">Enter the password to continue</p>
+    <input id="pw-input" type="password" placeholder="Password" autofocus style="
+      width:100%; padding:10px 14px; border-radius:8px; border:1px solid #334155;
+      background:#0f172a; color:#e2e8f0; font-size:14px; font-family:inherit;
+      outline:none; margin-bottom:12px;
+    " />
+    <button id="pw-btn" style="
+      width:100%; padding:10px; border-radius:8px; border:none;
+      background:#3b82f6; color:#fff; font-size:14px; font-weight:600;
+      font-family:inherit; cursor:pointer; transition:background 0.15s;
+    ">Unlock</button>
+    <p id="pw-error" style="color:#ef4444; font-size:12px; margin-top:12px; display:none;">Incorrect password</p>
+  </div>
+</div>
+<script src="auth.js"></script>
+
 <div id="intro">
   <a id="notion-link" href="https://www.notion.so/31bb87693a5a8196832cf4ee00d3c740" target="_blank">📄 Full Doc in Notion ↗</a>
   <a id="notion-db-link" href="https://www.notion.so/NFAT-Lifecycle-All-Steps-Stage-Cards-Database-Model-55223d6965ff4c69b5ab3d522c04dd12" target="_blank">🗄 DB Model in Notion ↗</a>
